@@ -1,16 +1,13 @@
 package webserver;
 
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.HttpRequestUtils;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -27,16 +24,6 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String url = br.readLine().split(" ")[1];
-            log.debug("url : {}", url);
-
-            if (url.startsWith("/user/create")) {
-                String queryString = url.split("\\?")[1];
-                Map<String, String> userInfo = HttpRequestUtils.parseQueryString(queryString);
-
-                User user = new User(userInfo.get("userId"), userInfo.get("password"), userInfo.get("name"), userInfo.get("email"));
-                log.debug(user.toString());
-            }
-
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = Files.readAllBytes(Paths.get("./webapp" + url));
             response200Header(dos, body.length);
