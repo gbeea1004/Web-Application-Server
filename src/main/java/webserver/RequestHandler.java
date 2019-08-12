@@ -6,15 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpRequestUtils;
 import util.IOUtils;
+import webserver.request.HttpRequest;
 
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RequestHandler extends Thread {
@@ -31,9 +30,10 @@ public class RequestHandler extends Thread {
 
         try (InputStream in = connection.getInputStream();
              OutputStream out = connection.getOutputStream()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
 
-            String url = br.readLine().split(" ")[1];
+            HttpRequest httpRequest = new HttpRequest(in);
+            String url = httpRequest.getPath();
 
             if (url.startsWith("/css")) {
                 DataOutputStream dos = new DataOutputStream(out);
@@ -43,11 +43,11 @@ public class RequestHandler extends Thread {
             }
 
             //get 방식
-            else if (url.startsWith("/users/?")) {
-                String queryString = url.split("\\?")[1];
-                User user = createUser(queryString);
-                log.debug(user.toString());
-            }
+//            else if (url.startsWith("/users/?")) {
+//                String queryString = url.split("\\?")[1];
+//                User user = createUser(queryString);
+//                log.debug(user.toString());
+//            }
             //post 방식
             else if (url.startsWith("/users/create")) {
                 int contentLen = 0;
