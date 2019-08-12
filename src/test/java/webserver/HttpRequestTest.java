@@ -13,7 +13,8 @@ public class HttpRequestTest {
     private final String httpHeader = "GET /index.html HTTP/1.1\n" +
             "Host: localhost:8080\n" +
             "Connection: krrreep-alive\n" +
-            "Accept: */*";
+            "Accept: */*\n" +
+            "\n";
 
     private HttpRequest httpRequest;
 
@@ -30,5 +31,10 @@ public class HttpRequestTest {
     @Test
     public void getPath() throws IOException {
         assertThat(httpRequest.getPath()).isEqualTo("/index.html");
+    }
+
+    @Test
+    public void getHeader() throws IOException {
+        assertThat(httpRequest.getHeader("Connection")).isEqualTo("krrreep-alive");
     }
 }

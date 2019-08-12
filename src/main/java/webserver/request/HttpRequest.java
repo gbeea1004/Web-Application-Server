@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class HttpRequest {
 
     public void initHeaders() throws IOException {
         String line;
-        while ((line = br.readLine()).equals("")) {
+        while (!(line = br.readLine()).equals("")) {
             String[] header = line.split(": ");
             headers.put(header[0], header[1]);
         }
@@ -37,5 +38,9 @@ public class HttpRequest {
 
     public String getPath() throws IOException {
         return requestLine.getUrl();
+    }
+
+    public String getParameter(String key) {
+        return requestLine.getParam(key);
     }
 }
