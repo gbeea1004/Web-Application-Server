@@ -6,15 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ResponseHeader {
-    private Map<String,String> headers;
-
-    public ResponseHeader(Map<String, String> headers) {
-        this.headers = headers;
-    }
+    private Map<String, String> headers = new HashMap<>();
 
     void addWriteHeader(DataOutputStream dos) throws IOException {
         for (String key : headers.keySet()) {
-            dos.writeBytes(key +": " + headers.get(key));
+            dos.writeBytes(key + ": " + headers.get(key) + "\r\n");
         }
+        dos.writeBytes("\r\n");
+    }
+
+    public void addHeader(String header, String value) {
+        headers.put(header, value);
     }
 }

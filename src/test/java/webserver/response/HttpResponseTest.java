@@ -6,7 +6,7 @@ import java.io.*;
 
 public class HttpResponseTest {
     private HttpResponse httpResponse;
-    private String testDirectory = "./src/test/resources";
+    private String testDirectory = "./src/test/resources/";
 
 
     @Test

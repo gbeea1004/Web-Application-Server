@@ -1,15 +1,17 @@
 package webserver.response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.HttpResponseUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 public class HttpResponse {
+    private static final Logger log = LoggerFactory.getLogger(HttpResponse.class);
+
     private StatusLine statusLine;
     private ResponseHeader responseHeader;
     private ResponseBody responseBody;
@@ -17,17 +19,11 @@ public class HttpResponse {
 
     public HttpResponse(DataOutputStream dos) {
         this.dos = dos;
-    }
-
-    public void addHeader(String s) {
+        responseHeader = new ResponseHeader();
     }
 
     private void addStatusLine(String httpVersion, HttpStatusCode statusCode) {
         statusLine = new StatusLine(httpVersion, statusCode);
-    }
-
-    private void addResponseHeader(Map<String, String> responseHeader) {
-        this.responseHeader = new ResponseHeader(responseHeader);
     }
 
     private void addResponseBody(String url) {
@@ -39,8 +35,8 @@ public class HttpResponse {
     }
 
     public void sendRedirect(String url) {
-        addStatusLine(HttpResponseUtils.HTTP_VERSION_1_1, HttpStatusCode.OK);
-        addResponseHeader(response3xxHeader());
+        addStatusLine(HttpResponseUtils.HTTP_VERSION_1_1, HttpStatusCode.FOUND);
+        addHeader("Location", url);
         writeResponseMessage();
     }
 
@@ -53,17 +49,17 @@ public class HttpResponse {
         }
     }
 
-    private Map<String, String> response3xxHeader() {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Location", "/index.html");
-        return headers;
+    public void forward(String filePath) {
+        addStatusLine(HttpResponseUtils.HTTP_VERSION_1_1, HttpStatusCode.OK);
+        log.debug("filePath : {}", filePath);
+        addResponseBody(filePath);
+
+        addHeader("Content-Length", responseBody.getBodyLength());
+        writeResponseMessage();
+        responseBody.responseBody(dos);
     }
 
-    public void forward(String url) {
-        addStatusLine(HttpResponseUtils.HTTP_VERSION_1_1, HttpStatusCode.OK);
-        addResponseHeader(response3xxHeader());
-        writeResponseMessage();
-        addResponseBody(url);
-        responseBody.responseBody(dos);
+    public void addHeader(String header, String value) {
+        responseHeader.addHeader(header, value);
     }
 }
