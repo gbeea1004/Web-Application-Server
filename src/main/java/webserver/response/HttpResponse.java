@@ -34,6 +34,10 @@ public class HttpResponse {
         }
     }
 
+    private void addResponseDynamicBody(String dynamicResource) {
+        this.responseBody = new ResponseBody(dynamicResource.getBytes());
+    }
+
     public void sendRedirect(String url) {
         addStatusLine(HttpResponseUtils.HTTP_VERSION_1_1, HttpStatusCode.FOUND);
         addHeader("Location", url);
@@ -54,6 +58,14 @@ public class HttpResponse {
         log.debug("filePath : {}", filePath);
         addResponseBody(filePath);
 
+        addHeader("Content-Length", responseBody.getBodyLength());
+        writeResponseMessage();
+        responseBody.responseBody(dos);
+    }
+
+    public void forwardBody(String dynamicResource) {
+        addStatusLine(HttpResponseUtils.HTTP_VERSION_1_1, HttpStatusCode.OK);
+        addResponseDynamicBody(dynamicResource);
         addHeader("Content-Length", responseBody.getBodyLength());
         writeResponseMessage();
         responseBody.responseBody(dos);

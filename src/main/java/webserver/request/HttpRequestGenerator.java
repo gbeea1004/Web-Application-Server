@@ -13,7 +13,7 @@ public class HttpRequestGenerator {
         BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
         RequestLine requestLine = HttpRequestUtils.createRequestLine(br);
         RequestHeader requestHeader = HttpRequestUtils.createRequestHeader(br);
-        RequestBody requestBody = HttpRequestUtils.crateRequestBody(br, requestHeader.getContentLength());
+        RequestBody requestBody = HttpRequestUtils.createRequestBody(br, requestHeader.getContentLength());
 
         return new HttpRequest(requestLine, requestHeader, requestBody);
     }

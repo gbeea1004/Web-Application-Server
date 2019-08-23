@@ -68,7 +68,7 @@ public class HttpRequestUtils {
         return new RequestHeader(headers);
     }
 
-    public static RequestBody crateRequestBody(BufferedReader br, int contentLength) throws IOException {
+    public static RequestBody createRequestBody(BufferedReader br, int contentLength) throws IOException {
         if (contentLength == 0) {
             return null;
         }

@@ -8,6 +8,7 @@ public class RequestHeader {
     public RequestHeader(Map<String, String> headers) {
         this.headers = headers;
     }
+
     public int getContentLength() {
         if (headers.get("Content-Length") == null) {
             return 0;

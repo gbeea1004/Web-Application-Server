@@ -3,7 +3,7 @@ package webserver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.controller.*;
-import webserver.controller.user.ListUserController;
+import webserver.controller.user.UserListController;
 import webserver.controller.user.LoginController;
 import webserver.controller.user.UserCreateController;
 
@@ -18,7 +18,7 @@ public class HandlerMapping {
     static {
         controllers.put("/users/create", new UserCreateController());
         controllers.put("/users/login", new LoginController());
-        controllers.put("/users/list", new ListUserController());
+        controllers.put("/users/list", new UserListController());
         controllers.put("/index", new HomeController());
         controllers.put("/css", new CSSController());
         controllers.put("/js", new JSController());
@@ -26,7 +26,7 @@ public class HandlerMapping {
         controllers.put("/icon", new IconController());
     }
 
-    public static Controller findController(String url) {
+    static Controller findController(String url) {
         for (String key : controllers.keySet()) {
             if (url.startsWith(key)) {
                 return controllers.get(key);
